@@ -1,0 +1,83 @@
+@WebApi_HostAddress = http://localhost:5261
+
+GET {{WebApi_HostAddress}}/api/persons/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+###
+
+Post {{WebApi_HostAddress}}/api/persons
+content-type: application/json
+
+{
+  "code": "13241233",
+  "firtsName": "Jose",
+  "lastName": "Perez",
+  "email": "jose.p@gmail.com",
+  "phoneNumber": "7731331419"
+}
+
+###
+GET {{WebApi_HostAddress}}/api/persons
+Accept: application/json
+
+###
+
+PUT {{WebApi_HostAddress}}/api/persons/ebf59dd4-909e-4dd1-9a89-945d7d36cec0
+content-type: application/json
+ 
+{
+  "id" : "ebf59dd4-909e-4dd1-9a89-945d7d36cec0",
+  "code": "13241233",
+  "firtsName": "Hector",
+  "lastName": "Perez",
+  "email": "hector.p@gmail.com",
+  "phoneNumber": "7731331419"
+}
+
+###
+DELETE {{WebApi_HostAddress}}/api/persons/ebf59dd4-909e-4dd1-9a89-945d7d36cec0
+
+
+###
+GET {{WebApi_HostAddress}}/api/persons/code/12345678
+accept: application/json
+
+
+### VISIT
+GET {{WebApi_HostAddress}}/api/visits
+accept: application/json
+
+###  Registro por id
+POST {{WebApi_HostAddress}}/api/visits/entry
+content-type: application/json
+
+  {
+    "personId": "4c5c18aa-7497-42ef-90f1-eb7a44be1b91",
+    "entryDate": null
+  }
+
+### Registro por code
+POST {{WebApi_HostAddress}}/api/visits/entry
+content-type: application/json
+
+  {
+    "code": "12345678",
+    "entryDate": null
+  }
+
+### Todas las visitas activas
+GET {{WebApi_HostAddress}}/api/visits/active
+Accept: application/json
+
+### historial de visitas por persona
+GET {{WebApi_HostAddress}}/api/visits/person/4c5c18aa-7497-42ef-90f1-eb7a44be1b91
+accept: application/json
+
+### Salida por id o code
+POST {{WebApi_HostAddress}}/api/visits/exit
+content-type: application/json
+
+  {
+    "visitId": "e5459f6c-a514-4339-bae2-8efba3c1f6b7",
+    "exitTime": null
+  }
