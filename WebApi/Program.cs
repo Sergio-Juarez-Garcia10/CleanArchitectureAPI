@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? throw new InvalidOperationException("Falta conexion a la BD");
+    ?? throw new InvalidOperationException("Falta conexión a la BD");
 
 //builder.Services.AddScoped<IRepository<PersonEntity, Guid>, PersonRepository>();
 //builder.Services.AddScoped<ICodeRepository<PersonEntity>, PersonRepository>();
