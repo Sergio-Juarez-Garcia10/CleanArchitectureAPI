@@ -8,6 +8,17 @@ using WebApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. Definir la política de CORS
+const string FrontendPolicy = "FrontendPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(FrontendPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // origen de tu Vite dev server
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -38,6 +49,9 @@ builder.Services.AddScoped<RegisterExitUseCase>();
 
 var app = builder.Build();
 
+app.UseCors(FrontendPolicy);
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -45,8 +59,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.MapPersonEndpoints();
 app.MapVisitsEndpoints();
 

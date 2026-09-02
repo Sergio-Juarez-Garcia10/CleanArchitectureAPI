@@ -26,7 +26,7 @@ namespace WebApi.Endpoints
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
 
-           group.MapPost("/api/persons", async (CreatePersonDTO request, CreatePersonsUseCase useCase) =>
+           group.MapPost("/", async (CreatePersonDTO request, CreatePersonsUseCase useCase) =>
             {
                 try
                 {
