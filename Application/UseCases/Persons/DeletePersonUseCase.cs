@@ -23,7 +23,7 @@ namespace Application.UseCases.Persons
 
             if (person == null)
             {
-                throw new InvalidOperationException($"No se encontro una perona con el id:{id}");
+                throw new InvalidOperationException($"No se encontró una persona con el id: {id}");
             }
 
             await _repository.DeleteAsync(person);

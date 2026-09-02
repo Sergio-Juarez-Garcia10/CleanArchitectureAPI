@@ -1,4 +1,6 @@
 ﻿using Domain;
+using Domain.Exceptions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -79,12 +81,25 @@ namespace Data.Persistence
                 entity.Property<DateTime>("UpdateAt").IsRequired().HasDefaultValueSql("GETUTCDATE()");
             });
         }
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateTimestamps();
-            return base.SaveChangesAsync(cancellationToken);
+
+            try
+            {
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException ex) when (IsForeignKeyViolation(ex))
+            {
+                throw new EntityHasRelatedRecordsException(innerException: ex);
+            }
         }
 
+        private static bool IsForeignKeyViolation(DbUpdateException ex)
+        {
+            // 547 = "The DELETE/UPDATE statement conflicted with the FOREIGN KEY constraint"
+            return ex.InnerException is SqlException sqlEx && sqlEx.Number == 547;
+        }
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries().Where(e=> e.State == EntityState.Modified);

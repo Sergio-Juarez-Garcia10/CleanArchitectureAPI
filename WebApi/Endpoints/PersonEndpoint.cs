@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Persons;
 using Application.UseCases.Persons;
+using Domain.Exceptions;
 
 namespace WebApi.Endpoints
 {
@@ -111,6 +112,10 @@ namespace WebApi.Endpoints
                     await useCase.ExecuteAsync(id);
                     return Results.NoContent();
                 }
+                catch (EntityHasRelatedRecordsException ex)
+                {
+                    return Results.Conflict(new { error = ex.Message });
+                }
                 catch (InvalidOperationException ex)
                 {
                     return Results.NotFound(new { error = ex.Message });
@@ -120,10 +125,11 @@ namespace WebApi.Endpoints
                     return Results.BadRequest(new { error = ex.Message });
                 }
             })
-             .WithName("DeletePerson")
-            .WithSummary("Eliminar una persona existente")
-            .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
+                .WithName("DeletePerson")
+                .WithSummary("Eliminar una persona existente")
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status409Conflict);
 
             group.MapGet("/code/{code}", async (string code, GetPersonByCodeUseCase useCase) =>
             {
